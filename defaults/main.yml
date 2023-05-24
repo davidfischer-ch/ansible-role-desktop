@@ -1,16 +1,16 @@
-desktop_package: ubuntu-gnome-desktop
+desktop_package: ubuntu-desktop
 file_utility_packages:
   - dos2unix
   - odt2txt
   - pdfshuffler
   #- pyrenamer
+  - rename
   - tofrodos
   - unoconv
 miscellaneous_packages:
   - stellarium
 office_packages:
   - gedit-plugins
-  - gnome-raw-thumbnailer
   - indicator-cpufreq
   - libreoffice-style-sifr
   - xournal
@@ -34,3 +34,4 @@ web_packages:
   - chromium-chromedriver
   - filezilla
   - firefox
+  - icedtea-plugin
