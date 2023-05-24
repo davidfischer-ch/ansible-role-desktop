@@ -2,7 +2,7 @@ desktop_package: ubuntu-desktop
 file_utility_packages:
   - dos2unix
   - odt2txt
-  - pdfshuffler
+  - pdfarranger
   #- pyrenamer
   - rename
   - tofrodos
