@@ -34,4 +34,4 @@ web_packages:
   - chromium-chromedriver
   - filezilla
   - firefox
-  - icedtea-plugin
+  - icedtea-netx
