@@ -12,14 +12,6 @@
   when: ansible_distribution == 'Ubuntu'
 
 - block:
-    - name: Install Nemo apt repository
-      apt_repository:
-        repo: ppa:webupd8team/nemo
-        filename: ansible_roles_desktop_nemo
-        state: present
-        update_cache: yes
-      when: desktop_package == 'ubuntu-desktop' and 'nemo' in ubuntu_desktop_packages
-
     - name: Install Ubuntu packages
       package:
         name:
