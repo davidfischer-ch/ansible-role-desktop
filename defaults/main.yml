@@ -16,6 +16,7 @@ office_packages:
   - xournal
 ubuntu_desktop_packages:
   - compizconfig-settings-manager
+  - ffmpegthumbnailer
   - nemo
   - nemo-fileroller
   - unity-tweak-tool
