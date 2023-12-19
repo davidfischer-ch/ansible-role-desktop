@@ -1,4 +1,26 @@
+---
+
+do_become: true
+
 desktop_package: ubuntu-desktop
+
+# Base packages
+ubuntu_base_packages:
+  - '{{ desktop_package }}'
+  - ubuntu-minimal
+  - ubuntu-restricted-addons
+  - ubuntu-restricted-extras
+  - libavcodec-extra
+  - ubuntu-standard
+
+# Packages to install when desktop_package is ubuntu-desktop
+ubuntu_desktop_packages:
+  - compizconfig-settings-manager
+  - ffmpegthumbnailer
+  - nemo
+  - nemo-fileroller
+  - unity-tweak-tool
+
 file_utility_packages:
   - dos2unix
   - odt2txt
@@ -14,12 +36,6 @@ office_packages:
   - indicator-cpufreq
   - libreoffice-style-sifr
   - xournal
-ubuntu_desktop_packages:
-  - compizconfig-settings-manager
-  - ffmpegthumbnailer
-  - nemo
-  - nemo-fileroller
-  - unity-tweak-tool
 system_packages:
   - apt-file
   - gdebi
@@ -36,3 +52,5 @@ web_packages:
   - filezilla
   - firefox
   - icedtea-netx
+
+...

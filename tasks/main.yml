@@ -1,10 +1,10 @@
 ---
 
 - name: Enable Canonical partners repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: '{{ item }} http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
     state: present
-  become: yes
+  become: '{{ do_become }}'
   loop:
     - deb
     - deb-src
@@ -12,64 +12,60 @@
   when: ansible_distribution == 'Ubuntu'
 
 - block:
-    - name: Install Ubuntu packages
-      package:
-        name:
-          - '{{ desktop_package }}'
-          - ubuntu-minimal
-          - ubuntu-restricted-addons
-          - ubuntu-restricted-extras
-          - libavcodec-extra
-          - ubuntu-standard
+    - name: Install Ubuntu base packages
+      ansible.builtin.package:
+        name: '{{ ubuntu_base_packages }}'
         state: present
       when: ansible_distribution == 'Ubuntu'
 
-    - name: Install office packages
-      package:
-        name: '{{ office_packages }}'
-        state: present
-
     - name: Install Ubuntu desktop packages
-      package:
+      ansible.builtin.package:
         name: '{{ ubuntu_desktop_packages }}'
         state: present
       when: desktop_package == 'ubuntu-desktop'
 
+    - name: Install office packages
+      ansible.builtin.package:
+        name: '{{ office_packages }}'
+        state: present
+
     - name: Install system packages
-      package:
+      ansible.builtin.package:
         name: '{{ system_packages }}'
         state: present
 
     - name: Update apt-file cache
-      command:
+      ansible.builtin.command:
         apt-file update
       when: "ansible_pkg_mgr == 'apt'"
 
     - name: Remove bumblebee packages
-      package:
+      ansible.builtin.package:
         name:
           - bumblebee
           - bumblebee-nvidia
         state: absent
 
     - name: Install files utilities packages
-      package:
+      ansible.builtin.package:
         name: '{{ file_utility_packages }}'
         state: present
 
     - name: Install miscellaneous packages
-      package:
+      ansible.builtin.package:
         name: '{{ miscellaneous_packages }}'
         state: present
 
     - name: Install virtualization packages
-      package:
+      ansible.builtin.package:
         name: '{{ virtualization_packages }}'
         state: present
 
     - name: Install web packages
-      package:
+      ansible.builtin.package:
         name: '{{ web_packages }}'
         state: present
-  become: yes
+  become: '{{ do_become }}'
   tags: [desktop, packages]
+
+...

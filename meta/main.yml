@@ -3,3 +3,5 @@
 dependencies:
   - role: java
     tags: [desktop, dependencies]
+
+...
