@@ -1,5 +1,11 @@
 # Changelog
 
-## v1.0.0
+## v1.0.1 (2024-11-15)
 
-- Initial release
+### Features
+
+* Ubuntu 24.04 compat
+
+## v1.0.0 (2020-03-01)
+
+* Initial release
