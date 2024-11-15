@@ -9,7 +9,9 @@
     - deb
     - deb-src
   tags: [desktop, config]
-  when: ansible_distribution == 'Ubuntu'
+  when: >
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_version is ansible.builtin.version_compare('24', '<')
 
 - block:
     - name: Install Ubuntu base packages
