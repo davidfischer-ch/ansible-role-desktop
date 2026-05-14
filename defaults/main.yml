@@ -4,6 +4,13 @@ do_become: true
 
 desktop_package: ubuntu-desktop
 
+desktop_snap_enabled: true
+desktop_snap_directories:
+  - /snap
+  - /var/snap
+  - /var/lib/snapd
+  - /var/cache/snapd
+
 # Base packages
 ubuntu_base_packages:
   - '{{ desktop_package }}'
@@ -29,23 +36,28 @@ file_utility_packages:
   - rename
   - tofrodos
   - unoconv
+
 miscellaneous_packages:
   - stellarium
+
 office_packages:
   - gedit-plugins
   - indicator-cpufreq
   - libreoffice-style-sifr
   - xournal
+
 system_packages:
   - apt-file
   - gdebi
   - gparted
   - playonlinux
   - wireshark
+
 virtualization_packages:
   - virtualbox
   - virtualbox-guest-additions-iso
   - virtualbox-qt
+
 web_packages:
   - chromium-browser
   - chromium-chromedriver

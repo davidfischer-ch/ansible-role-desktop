@@ -1,0 +1,90 @@
+---
+# FIXME tags must be repeated in included files https://github.com/ansible/ansible/issues/16985
+
+- block:
+    - name: Get installed snaps
+      ansible.builtin.command: >
+        snap list
+      register: _snap_list
+      changed_when: false
+      failed_when: false
+
+    - name: Remove all installed snaps
+      ansible.builtin.command: >
+        snap remove --purge {{ item }}
+      loop: >-
+        {{ _snap_list.stdout_lines[1:]
+           | map('split')
+           | map('first')
+           | list }}
+      when: _snap_list is success
+      ignore_errors: true
+
+    - name: Remove snapd package
+      ansible.builtin.package:
+        name: snapd
+        state: absent
+
+    - name: Get snap-related mounts
+      ansible.builtin.shell: >
+        mount | awk '$3 ~ "^/snap" || $3 ~ "^/var/snap" {print $3}'
+      register: _snap_mounts
+      changed_when: false
+      failed_when: false
+
+    - name: Unmount snap-related filesystems
+      ansible.builtin.command: >
+        umount -l {{ item }}
+      loop: '{{ _snap_mounts.stdout_lines }}'
+      when: _snap_mounts.stdout_lines | length > 0
+      failed_when: false
+
+    - name: Remove snap directories
+      ansible.builtin.file:
+        path: '{{ item }}'
+        state: absent
+      loop: '{{ desktop_snap_directories }}'
+
+    - name: Prevent snapd reinstallation via apt
+      ansible.builtin.copy:
+        dest: /etc/apt/preferences.d/nosnap
+        content: |
+          Package: snapd
+          Pin: release a=*
+          Pin-Priority: -1
+  become: '{{ do_become }}'
+  tags: [desktop, packages]
+
+- block:
+    - name: Install Mozilla Team apt repository
+      ansible.builtin.apt_repository:
+        repo: ppa:mozillateam/ppa
+        filename: ansible_roles_desktop_mozillateam
+        state: present
+
+    - name: Set apt preferences for no-snap Firefox
+      ansible.builtin.copy:
+        dest: /etc/apt/preferences.d/mozilla
+        content: |
+          Package: *
+          Pin: release o=LP-PPA-mozillateam
+          Pin-Priority: 500
+
+          Package: firefox*
+          Pin: release o=Ubuntu
+          Pin-Priority: -1
+
+          Package: thunderbird
+          Pin: version 2:1snap*
+          Pin-Priority: -1
+
+    - name: Set apt preferences for no-snap Chromium
+      ansible.builtin.copy:
+        dest: /etc/apt/preferences.d/chromium
+        content: |
+          Package: chromium*
+          Pin: origin "deb.debian.org"
+          Pin-Priority: 700
+  become: '{{ do_become }}'
+
+...
