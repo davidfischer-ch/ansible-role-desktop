@@ -52,10 +52,52 @@
           - bumblebee-nvidia
         state: absent
 
+    - name: Remove dcraw (replaced by exiftool-based thumbnailer)
+      ansible.builtin.package:
+        name: dcraw
+        state: absent
+
     - name: Install files utilities packages
       ansible.builtin.package:
         name: '{{ file_utility_packages }}'
         state: present
+
+    - name: Install RAW thumbnailer script
+      ansible.builtin.copy:
+        dest: /usr/local/bin/raw-thumbnailer
+        content: |
+          #!/bin/bash
+          # Extract embedded JPEG preview from RAW file using exiftool.
+          # Avoids full RAW decode — fast and crash-free for all brands.
+          INPUT="$1"
+          OUTPUT="$2"
+          SIZE="$3"
+          TMPFILE=$(mktemp --suffix=.jpg)
+          exiftool -b -JpgFromRaw "$INPUT" > "$TMPFILE" 2>/dev/null
+          if [ -s "$TMPFILE" ]; then
+              convert "$TMPFILE" -thumbnail "${SIZE}x${SIZE}" "$OUTPUT"
+              STATUS=$?
+              rm -f "$TMPFILE"
+              exit $STATUS
+          fi
+          rm -f "$TMPFILE"
+          exit 1
+        mode: '0755'
+
+    - name: Remove old dcraw-based CR2 thumbnailer config
+      ansible.builtin.file:
+        path: /usr/share/thumbnailers/cr2.thumbnailer
+        state: absent
+
+    - name: Install RAW thumbnailer config for Nautilus
+      ansible.builtin.copy:
+        dest: /usr/share/thumbnailers/raw.thumbnailer
+        content: |
+          [Thumbnailer Entry]
+          TryExec=/usr/local/bin/raw-thumbnailer
+          Exec=/usr/local/bin/raw-thumbnailer %i %o %s
+          MimeType=image/x-canon-cr2;image/x-canon-cr3;image/x-nikon-nef;image/x-sony-arw;image/x-adobe-dng;image/x-panasonic-rw2;image/x-olympus-orf;image/x-fuji-raf;image/x-raw;image/x-dcraw;
+        mode: '0644'
 
     - name: Install miscellaneous packages
       ansible.builtin.package:

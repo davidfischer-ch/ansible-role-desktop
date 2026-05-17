@@ -30,6 +30,8 @@ ubuntu_desktop_packages:
 
 file_utility_packages:
   - dos2unix
+  - imagemagick
+  - libimage-exiftool-perl
   - odt2txt
   - pdfarranger
   #- pyrenamer
