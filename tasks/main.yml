@@ -13,8 +13,13 @@
     ansible_distribution == 'Ubuntu' and
     ansible_distribution_version is ansible.builtin.version_compare('24', '<')
 
+- ansible.builtin.assert:
+    that:
+      - desktop_snap_mode in desktop_snap_modes
+  tags: [desktop, always]
+
 - name: Setup snap mode
-  ansible.builtin.include_tasks: setup-snap-{{ 'enabled' if desktop_snap_enabled|bool else 'disabled' }}.yml
+  ansible.builtin.include_tasks: setup-snap-{{ desktop_snap_mode }}.yml
   tags: [desktop, packages]
 
 - block:

@@ -11,7 +11,11 @@ See [meta](meta/main.yml).
 
 ## Variables
 
-TODO VARIABLES
+| Variable | Default | Description |
+|---|---|---|
+| `desktop_snap_mode` | `enabled` | Snap management mode: `enabled` (keep snap), `partial` (remove managed packages, keep snap daemon), `disabled` (purge snap entirely). |
+| `desktop_snap_flush_packages` | `{{ web_packages }}` | Snap package names to remove in `partial` and `disabled` modes. Names must match snap identifiers (may differ from apt names, e.g. `chromium` not `chromium-browser`). Failures are silenced. |
+| `desktop_snap_directories` | `/snap`, `/var/snap`, `/var/lib/snapd`, `/var/cache/snapd` | Directories to purge in `disabled` mode. |
 
 ## License
 

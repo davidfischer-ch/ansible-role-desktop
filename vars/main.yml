@@ -1,0 +1,8 @@
+---
+
+desktop_snap_modes:
+  - disabled
+  - enabled
+  - partial
+
+...

@@ -4,7 +4,8 @@ do_become: true
 
 desktop_package: ubuntu-desktop
 
-desktop_snap_enabled: true
+desktop_snap_flush_packages: '{{ web_packages }}'
+desktop_snap_mode: enabled
 desktop_snap_directories:
   - /snap
   - /var/snap
